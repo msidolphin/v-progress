@@ -6,17 +6,47 @@ export default Vue.extend({
   name: 'ServeDev',
   components: {
     VProgress
+  },
+  data () {
+    return {
+      percent: 0.8
+    }
+  },
+  mounted () {
+    this.timer = setInterval(() => {
+      this.percent = Math.random()
+    }, 1000)
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
   }
-});
+})
 </script>
 
 <template>
   <div id="app">
-    <v-progress className="hover" :chunks="44" :percent="0.8"/>
+    <v-progress
+      className="hover"
+      :chunks="20"
+      :colors="['red', 'blue', 'orange']"
+      :percent="percent"
+      curve="linear"
+    />
+    <br/>
+    <v-progress
+      className="hover"
+      :chunks="44"
+      :percent="percent"
+    />
   </div>
 </template>
 
 <style scoped>
+.hover {
+  width: 360px;
+  height: 36px;
+  border-color: #000;
+}
 .hover:hover {
   border-color: red;
 }

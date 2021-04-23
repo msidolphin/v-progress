@@ -1,18 +1,18 @@
 <template>
   <div class="progress"
-    :class="className">
+    :class="className" ref="wrapper">
     <div class="progress-content" ref="progress">
       <svg>
         <defs>
-            <linearGradient
-              :id="gradientId"
-              x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop
-                v-for="color in stopColors"
-                :key="color[0]"
-                :offset="`${color[0]}%`"
-                :stop-color="color[1]">
-              </stop>
+          <linearGradient
+            :id="gradientId"
+            x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop
+              v-for="color in stopColors"
+              :key="color[0]"
+              :offset="`${color[0]}%`"
+              :stop-color="color[1]">
+            </stop>
           </linearGradient>
         </defs>
         <polyline
@@ -34,22 +34,31 @@
 
 <script>
 import { observerDomResize, unObserverDomResize, debounce } from './util'
-import { raf, caf } from './request-animation-frame'
+import { createRequestAnimtionFrame } from './request-animation-frame'
+import { CURVE,
+  DEFAULT_CURVE,
+  DEFAULT_CHUNK_BACKGROUND,
+  DEFAULT_CHUNKS,
+  DEFAULT_CHUNK_GAPS,
+  DEFAULT_DURATION,
+  DEFAULT_COLORS
+} from './constant'
 const tweenFunctions = require('tween-functions')
+
 let uid = 0
 export default {
   props: {
     chunks: {
       type: Number,
-      default: 20
+      default: DEFAULT_CHUNKS
     },
     chunkGaps: {
       type: Number,
-      default: 1
+      default: DEFAULT_CHUNK_GAPS
     },
     chunkColor: {
       type: String,
-      default: 'rgba(0,0,0,.2)'
+      default: DEFAULT_CHUNK_BACKGROUND
     },
     /// 0 - 1
     percent: {
@@ -58,12 +67,7 @@ export default {
     },
     colors: {
       type: Array,
-      default () {
-        return [
-          '#56D6C7',
-          '#409BFF'
-        ]
-      }
+      default: DEFAULT_COLORS
     },
     className: {
       type: String,
@@ -71,7 +75,14 @@ export default {
     },
     duration: {
       type: Number,
-      default: 300
+      default: DEFAULT_DURATION
+    },
+    curve: {
+      type: String,
+      default: DEFAULT_CURVE,
+      validator (val) {
+        return CURVE.indexOf(val) !== -1
+      }
     }
   },
   methods: {
@@ -82,7 +93,7 @@ export default {
     },
     observerDom() {
       this.debounceInitSize = debounce(this.initSize, 200)
-      this.observer = observerDomResize(this.$refs.progress, this.debounceInitSize)
+      this.observer = observerDomResize(this.$refs.wrapper, this.debounceInitSize)
       window.addEventListener('resize', this.debounceInitSize)
     },
     unObserverDom() {
@@ -90,19 +101,20 @@ export default {
       window.removeEventListener('resize', this.debounceInitSize)
     },
     start () {
+      this.caf(this.rafId)
       this.startTime = new Date().getTime()
       this.startVal = this.oldVal
       this.endVal = this.percent * this.width
-      raf(this.step)
+      this.raf(this.step)
     },
     step (timestamp) {
       let progress = timestamp - this.startTime
-      let v = tweenFunctions.easeInQuad(progress, this.startVal, this.endVal, this.duration)
+      let v = tweenFunctions[this.curve](progress, this.startVal, this.endVal, this.duration)
       if (progress < this.duration) {
-        this.raf = raf(this.step)
+        this.rafId = this.raf(this.step)
       } else {
         v = this.endVal
-        caf(this.raf)
+        this.caf(this.rafId)
       }
       this.value = v
       this.oldVal = this.value
@@ -146,12 +158,19 @@ export default {
       }
     }
   },
+  created () {
+    const { raf, caf } = createRequestAnimtionFrame()
+    this.raf = raf
+    this.caf = caf
+  },
   mounted () {
     this.observerDom()
     this.initSize()
   },
   beforeDestroy () {
     this.unObserverDom()
+    this.raf = null
+    this.caf = null
   }
 }
 </script>

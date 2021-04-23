@@ -3,7 +3,7 @@ export function observerDomResize(dom, callback) {
   
     const observer = new MutationObserver(callback)
   
-    observer.observe(dom, { attributes: true, attributeFilter: ['style'], attributeOldValue: true })
+    observer.observe(dom, { attributes: true, attributeFilter: ['style', 'class'], attributeOldValue: true })
   
     return observer
 }
