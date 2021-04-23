@@ -2,8 +2,8 @@
   "name": "v-progress",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/v-progress.ssr.js",
-  "browser": "dist/v-progress.esm.js",
+  "main": "dist/v-progress.umd.js",
+  "browser": "dist/v-progress.umd.js",
   "module": "dist/v-progress.esm.js",
   "unpkg": "dist/v-progress.min.js",
   "files": [

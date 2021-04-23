@@ -105,14 +105,14 @@ if (!argv.format || argv.format === 'es') {
   buildFormats.push(esConfig);
 }
 
-if (!argv.format || argv.format === 'cjs') {
+if (!argv.format || argv.format === 'umd') {
   const umdConfig = {
     ...baseConfig,
     external,
     output: {
       compact: true,
-      file: 'dist/v-progress.ssr.js',
-      format: 'cjs',
+      file: 'dist/v-progress.umd.js',
+      format: 'umd',
       name: 'VProgress',
       exports: 'auto',
       globals,
@@ -124,7 +124,6 @@ if (!argv.format || argv.format === 'cjs') {
         ...baseConfig.plugins.vue,
         template: {
           ...baseConfig.plugins.vue.template,
-          optimizeSSR: true,
         },
       }),
       ...baseConfig.plugins.postVue,

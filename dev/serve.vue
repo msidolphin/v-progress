@@ -12,6 +12,6 @@ export default Vue.extend({
 
 <template>
   <div id="app">
-    <v-progress :chunks="44" :percent="0.58"/>
+    <v-progress :chunks="44" :percent="0.8"/>
   </div>
 </template>
