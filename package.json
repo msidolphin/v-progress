@@ -2,6 +2,16 @@
   "name": "@msidolphin/v-progress",
   "version": "1.0.0",
   "description": "",
+  "author": "msidolphin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msidolphin/v-progress.git"
+  },
+  "bugs": {
+    "url": "https://github.com/msidolphin/v-progress/issues"
+  },
+  "homepage": "https://github.com/msidolphin/v-progress#readme",
   "main": "dist/v-progress.umd.js",
   "browser": "dist/v-progress.umd.js",
   "module": "dist/v-progress.esm.js",
