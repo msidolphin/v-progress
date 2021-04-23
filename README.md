@@ -75,11 +75,11 @@ export default {
 | percent | number | 0  | 进度所占比例 [0 - 1] |
 | chunks  | number | 20  | 分块数量 |
 | chunkGaps  | number | 1  | 分块间距 |
-| chunkGaps  | number | 1  | 分块间距 |
 | chunkColor  | string | rgba(0,0,0,.2) | 分块的背景色 |
 | colors  | array<string> | ['#56D6C7', '#409BFF'] | 进度条背景色 |
 | duration  | number | 300  | 动画时长 |
 | curve  | string | easeInQuad  | 动画缓动函数 |
+
 
 ### 缓动函数可选值
 
