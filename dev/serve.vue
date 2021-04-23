@@ -1,0 +1,17 @@
+<script>
+import Vue from 'vue';
+import VProgress from '@/v-linear-progress.vue';
+
+export default Vue.extend({
+  name: 'ServeDev',
+  components: {
+    VProgress
+  }
+});
+</script>
+
+<template>
+  <div id="app">
+    <v-progress :chunks="44" :percent="0.58"/>
+  </div>
+</template>
