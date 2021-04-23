@@ -12,6 +12,12 @@ export default Vue.extend({
 
 <template>
   <div id="app">
-    <v-progress :chunks="44" :percent="0.8"/>
+    <v-progress className="hover" :chunks="44" :percent="0.8"/>
   </div>
 </template>
+
+<style scoped>
+.hover:hover {
+  border-color: red;
+}
+</style>
