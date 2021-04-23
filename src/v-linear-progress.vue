@@ -63,7 +63,10 @@ export default {
     /// 0 - 1
     percent: {
       type: Number,
-      default: 0
+      default: 0,
+      validator (val) {
+        return val >= 0 && val <= 1
+      }
     },
     colors: {
       type: Array,
@@ -80,7 +83,7 @@ export default {
     curve: {
       type: String,
       default: DEFAULT_CURVE,
-      validator (val) {
+      validator(val) {
         return CURVE.indexOf(val) !== -1
       }
     }
@@ -100,14 +103,14 @@ export default {
       unObserverDomResize(this.observer)
       window.removeEventListener('resize', this.debounceInitSize)
     },
-    start () {
+    start() {
       this.caf(this.rafId)
       this.startTime = new Date().getTime()
       this.startVal = this.oldVal
       this.endVal = this.percent * this.width
       this.raf(this.step)
     },
-    step (timestamp) {
+    step(timestamp) {
       let progress = timestamp - this.startTime
       let v = tweenFunctions[this.curve](progress, this.startVal, this.endVal, this.duration)
       if (progress < this.duration) {
@@ -131,23 +134,35 @@ export default {
   },
   computed: {
     stopColors() {
-      return this.colors.map((c, i) => [(100 / (this.colors.length - 1)) * i, c])
+      const colors = this.colors
+      return colors.map((c, i) => [(100 / (colors.length - 1)) * i, c])
     },
     backgroundPoints() {
+      const height = this.height
       return `
-        0, ${this.height / 2}
-        ${this.width}, ${(this.height / 2 ) + 0.0001}
+        0, ${height / 2}
+        ${this.width}, ${(height / 2 ) + 0.0001}
       `
     },
     foreGroundPoints() {
+      const height = this.height
       return `
-        0, ${this.height / 2}
-        ${this.value}, ${(this.height / 2 ) + 0.0001}
+        0, ${height / 2}
+        ${this.value}, ${(height / 2 ) + 0.0001}
       `
     },
-    strokeDasharray () {
-      if (this.chunks === 0) return ''
-      return [(this.width - (this.chunks - 1)) / this.chunks,this.chunkGaps].join(',')
+    strokeDasharray() {
+      const chunks = this.chunks
+      const chunkGaps = this.chunkGaps
+      const width = this.width
+      if (width === 0) return ''
+      if (chunks === 0) return ''
+      let blankWidth = (chunks - 1) * chunkGaps
+      if (blankWidth > width) {
+        let chunkWidth = (width - chunks + 1) / chunks
+        return chunkWidth <= 0 ? '' : [chunkWidth, 1].join(',')
+      }
+      return [(width - blankWidth) / chunks, chunkGaps].join(',')
     }
   },
   watch: {
@@ -158,16 +173,16 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     const { raf, caf } = createRequestAnimtionFrame()
     this.raf = raf
     this.caf = caf
   },
-  mounted () {
+  mounted() {
     this.observerDom()
     this.initSize()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.unObserverDom()
     this.raf = null
     this.caf = null

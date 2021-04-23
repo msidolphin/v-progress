@@ -27,7 +27,7 @@ export default Vue.extend({
   <div id="app">
     <v-progress
       className="hover"
-      :chunks="20"
+      :chunks="44"
       :colors="['red', 'blue', 'orange']"
       :percent="percent"
       curve="linear"
@@ -36,6 +36,7 @@ export default Vue.extend({
     <v-progress
       className="hover"
       :chunks="44"
+      :chunk-gaps="2"
       :percent="percent"
     />
   </div>
