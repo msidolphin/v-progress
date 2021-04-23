@@ -1,5 +1,5 @@
 {
-  "name": "v-progress",
+  "name": "@msidolphin/v-progress",
   "version": "1.0.0",
   "description": "",
   "main": "dist/v-progress.umd.js",
